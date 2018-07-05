@@ -1,11 +1,7 @@
 package com.barbershop.domain;
 
-import static com.barbershop.repository.impl.ConnectionFactory.*;
 
 public class Customer extends Person {
-
-
-
 
     public Customer() {
     }
@@ -14,6 +10,10 @@ public class Customer extends Person {
         super(firstName, lastName, middleName);
     }
 
-
+    @Override
+    public String toString() {
+        return "Customer(First name = " + getFirstName() + ", last name = " + getLastName() + "," +
+                " middle name = " + getMiddleName() + ", phone number = " + getPhoneNumber() + ")";
+    }
 
 }

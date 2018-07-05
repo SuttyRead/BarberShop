@@ -26,18 +26,9 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
         return instance;
     }
 
-    private static final String CREATE_MANICURIST_TABLE = "CREATE TABLE IF NOT EXISTS manicurists (" +
-            Manicurist.ID + " INT(11) PRIMARY KEY AUTO_INCREMENT," +
-            Manicurist.FIRST_NAME + " VARCHAR(255)," +
-            Manicurist.LAST_NAME + " VARCHAR(255)," +
-            Manicurist.MIDDLE_NAME + " VARCHAR(255)," +
-            Manicurist.YEAR_OF_BIRTHDAY + " VARCHAR(255)," +
-            Manicurist.HIRING + " VARCHAR(255)," +
-            Manicurist.EXPERIENCE + " DOUBLE(4)," +
-            ");";
 
     private static final String INSERT_MANICURIST = String.format("INSERT INTO manicurists(%s, %s, %s, %s, %s, %s)" +
-            " VALUES (?, ?, ?, ?, ?, ?);", Manicurist.FIRST_NAME, Manicurist.LAST_NAME, Manicurist.MIDDLE_NAME, Manicurist.YEAR_OF_BIRTHDAY, Manicurist.HIRING, Manicurist.EXPERIENCE);
+            " VALUES (?, ?, ?, ?, ?, ?);", Manicurist.FIRST_NAME, Manicurist.LAST_NAME, Manicurist.MIDDLE_NAME, Manicurist.PHONE_NUMBER, Manicurist.HIRING, Manicurist.EXPERIENCE);
 
     private static final String GET_ALL_MANICURISTS = "SELECT * FROM manicurists";
 
@@ -48,14 +39,12 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
     private static final String GET_MANICURIST_BY_NAME = "SELECT * FROM manicurists WHERE first_name = ? and last_name = ? and middle_name = ?";
 
     private static final String UPDATE_MANICURIST = String.format("UPDATE manicurists SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? " +
-            "WHERE id = ?", Manicurist.FIRST_NAME, Manicurist.LAST_NAME, Manicurist.MIDDLE_NAME, Manicurist.YEAR_OF_BIRTHDAY, Manicurist.HIRING, Manicurist.EXPERIENCE);
+            "WHERE id = ?", Manicurist.FIRST_NAME, Manicurist.LAST_NAME, Manicurist.MIDDLE_NAME, Manicurist.PHONE_NUMBER, Manicurist.HIRING, Manicurist.EXPERIENCE);
 
-    public ManicuristDAOH2Impl() {
-        createTableIfNotExists();
-    }
 
     @Override
     public void addManicurist(Manicurist manicurist) {
+        MasterHandDAOH2Impl masterHandDAOH2 = new MasterHandDAOH2Impl();
         try {
             connection = getInstance().getConnection();
             pst = connection.prepareStatement(INSERT_MANICURIST);
@@ -63,11 +52,13 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
             pst.setString(1, manicurist.getFirstName());
             pst.setString(2, manicurist.getLastName());
             pst.setString(3, manicurist.getMiddleName());
-            pst.setString(4, manicurist.getYearOfBirthday().toString());
+            pst.setString(4, manicurist.getPhoneNumber().toString());
             pst.setString(5, manicurist.getHiring().toString());
             pst.setDouble(6, manicurist.getExperience());
 
             pst.execute();
+
+            masterHandDAOH2.addMasterHand(manicurist);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,7 +83,7 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
                 manicurist.setFirstName(rs.getString(Manicurist.FIRST_NAME));
                 manicurist.setLastName(rs.getString(Manicurist.LAST_NAME));
                 manicurist.setMiddleName(rs.getString(Manicurist.MIDDLE_NAME));
-                manicurist.setYearOfBirthday(rs.getString(Manicurist.YEAR_OF_BIRTHDAY));
+                manicurist.setPhoneNumber(rs.getString(Manicurist.PHONE_NUMBER));
                 manicurist.setHiring(rs.getString(Manicurist.HIRING));
                 manicurist.setExperience(rs.getDouble(Manicurist.EXPERIENCE));
                 manicurists.add(manicurist);
@@ -122,7 +113,7 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
                 manicurist.setFirstName(rs.getString(Manicurist.FIRST_NAME));
                 manicurist.setLastName(rs.getString(Manicurist.LAST_NAME));
                 manicurist.setMiddleName(rs.getString(Manicurist.MIDDLE_NAME));
-                manicurist.setYearOfBirthday(rs.getString(Manicurist.YEAR_OF_BIRTHDAY));
+                manicurist.setPhoneNumber(rs.getString(Manicurist.PHONE_NUMBER));
                 manicurist.setHiring(rs.getString(Manicurist.HIRING));
                 manicurist.setExperience(rs.getDouble(Manicurist.EXPERIENCE));
             }
@@ -151,7 +142,7 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
                 manicurist.setFirstName(rs.getString(Manicurist.FIRST_NAME));
                 manicurist.setLastName(rs.getString(Manicurist.LAST_NAME));
                 manicurist.setMiddleName(rs.getString(Manicurist.MIDDLE_NAME));
-                manicurist.setYearOfBirthday(rs.getString(Manicurist.YEAR_OF_BIRTHDAY));
+                manicurist.setPhoneNumber(rs.getString(Manicurist.PHONE_NUMBER));
                 manicurist.setHiring(rs.getString(Manicurist.HIRING));
                 manicurist.setExperience(rs.getDouble(Manicurist.EXPERIENCE));
             }
@@ -173,7 +164,7 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
             pst.setString(1, manicurist.getFirstName());
             pst.setString(2, manicurist.getLastName());
             pst.setString(3, manicurist.getMiddleName());
-            pst.setString(4, manicurist.getYearOfBirthday());
+            pst.setString(4, manicurist.getPhoneNumber());
             pst.setString(5, manicurist.getHiring());
             pst.setDouble(6, manicurist.getExperience());
             pst.setInt(7, manicurist.getId());
@@ -206,17 +197,5 @@ public class ManicuristDAOH2Impl implements ManicuristDAO {
         }
     }
 
-    private void createTableIfNotExists() {
-        try {
-            connection = getInstance().getConnection();
-            stmt = connection.createStatement();
-            stmt.executeUpdate(CREATE_MANICURIST_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            getInstance().closeStatement(stmt);
-            getInstance().closeConnection(connection);
-        }
-    }
 
 }

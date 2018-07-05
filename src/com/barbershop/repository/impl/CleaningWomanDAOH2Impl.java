@@ -26,18 +26,8 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
         return instance;
     }
 
-    private static final String CREATE_CLEANING_WOMAN_TABLE = "CREATE TABLE IF NOT EXISTS cleaning_women (" +
-            CleaningWoman.ID + " INT(11) PRIMARY KEY AUTO_INCREMENT," +
-            CleaningWoman.FIRST_NAME + " VARCHAR(255)," +
-            CleaningWoman.LAST_NAME + " VARCHAR(255)," +
-            CleaningWoman.MIDDLE_NAME + " VARCHAR(255)," +
-            CleaningWoman.YEAR_OF_BIRTHDAY + " VARCHAR(255)," +
-            CleaningWoman.HIRING + " VARCHAR(255)," +
-            CleaningWoman.EXPERIENCE + " DOUBLE(4)," +
-            ");";
-
     private static final String INSERT_CLEANING_WOMAN = String.format("INSERT INTO cleaning_women(%s, %s, %s, %s, %s, %s)" +
-            " VALUES (?, ?, ?, ?, ?, ?);", CleaningWoman.FIRST_NAME, CleaningWoman.LAST_NAME, CleaningWoman.MIDDLE_NAME, CleaningWoman.YEAR_OF_BIRTHDAY, CleaningWoman.HIRING, CleaningWoman.EXPERIENCE);
+            " VALUES (?, ?, ?, ?, ?, ?);", CleaningWoman.FIRST_NAME, CleaningWoman.LAST_NAME, CleaningWoman.MIDDLE_NAME, CleaningWoman.PHONE_NUMBER, CleaningWoman.HIRING, CleaningWoman.EXPERIENCE);
 
     private static final String GET_ALL_CLEANING_WOMEN = "SELECT * FROM cleaning_women";
 
@@ -48,11 +38,9 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
     private static final String GET_CLEANING_WOMAN_BY_NAME = "SELECT * FROM cleaning_women WHERE first_name = ? and last_name = ? and middle_name = ?";
 
     private static final String UPDATE_CLEANING_WOMAN = String.format("UPDATE cleaning_women SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? " +
-            "WHERE id = ?", CleaningWoman.FIRST_NAME, CleaningWoman.LAST_NAME, CleaningWoman.MIDDLE_NAME, CleaningWoman.YEAR_OF_BIRTHDAY, CleaningWoman.HIRING, CleaningWoman.EXPERIENCE);
+            "WHERE id = ?", CleaningWoman.FIRST_NAME, CleaningWoman.LAST_NAME, CleaningWoman.MIDDLE_NAME, CleaningWoman.PHONE_NUMBER, CleaningWoman.HIRING, CleaningWoman.EXPERIENCE);
 
-    public CleaningWomanDAOH2Impl() {
-        createTableIfNotExists();
-    }
+
 
     @Override
     public void addCleaningWoman(CleaningWoman cleaningWoman) {
@@ -63,7 +51,7 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
             pst.setString(1, cleaningWoman.getFirstName());
             pst.setString(2, cleaningWoman.getLastName());
             pst.setString(3, cleaningWoman.getMiddleName());
-            pst.setString(4, cleaningWoman.getYearOfBirthday());
+            pst.setString(4, cleaningWoman.getPhoneNumber());
             pst.setString(5, cleaningWoman.getHiring());
             pst.setDouble(6, cleaningWoman.getExperience());
 
@@ -92,7 +80,7 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
                 cleaningWoman.setFirstName(rs.getString(CleaningWoman.FIRST_NAME));
                 cleaningWoman.setLastName(rs.getString(CleaningWoman.LAST_NAME));
                 cleaningWoman.setMiddleName(rs.getString(CleaningWoman.MIDDLE_NAME));
-                cleaningWoman.setYearOfBirthday(rs.getString(CleaningWoman.YEAR_OF_BIRTHDAY));
+                cleaningWoman.setPhoneNumber(rs.getString(CleaningWoman.PHONE_NUMBER));
                 cleaningWoman.setHiring(rs.getString(CleaningWoman.HIRING));
                 cleaningWoman.setExperience(rs.getDouble(CleaningWoman.EXPERIENCE));
                 cleaningWomen.add(cleaningWoman);
@@ -122,7 +110,7 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
                 cleaningWoman.setFirstName(rs.getString(CleaningWoman.FIRST_NAME));
                 cleaningWoman.setLastName(rs.getString(CleaningWoman.LAST_NAME));
                 cleaningWoman.setMiddleName(rs.getString(CleaningWoman.MIDDLE_NAME));
-                cleaningWoman.setYearOfBirthday(rs.getString(CleaningWoman.YEAR_OF_BIRTHDAY));
+                cleaningWoman.setPhoneNumber(rs.getString(CleaningWoman.PHONE_NUMBER));
                 cleaningWoman.setHiring(rs.getString(CleaningWoman.HIRING));
                 cleaningWoman.setExperience(rs.getDouble(CleaningWoman.EXPERIENCE));
             }
@@ -151,7 +139,7 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
                 cleaningWoman.setFirstName(rs.getString(CleaningWoman.FIRST_NAME));
                 cleaningWoman.setLastName(rs.getString(CleaningWoman.LAST_NAME));
                 cleaningWoman.setMiddleName(rs.getString(CleaningWoman.MIDDLE_NAME));
-                cleaningWoman.setYearOfBirthday(rs.getString(CleaningWoman.YEAR_OF_BIRTHDAY));
+                cleaningWoman.setPhoneNumber(rs.getString(CleaningWoman.PHONE_NUMBER));
                 cleaningWoman.setHiring(rs.getString(CleaningWoman.HIRING));
                 cleaningWoman.setExperience(rs.getDouble(CleaningWoman.EXPERIENCE));
             }
@@ -173,7 +161,7 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
             pst.setString(1, cleaningWoman.getFirstName());
             pst.setString(2, cleaningWoman.getLastName());
             pst.setString(3, cleaningWoman.getMiddleName());
-            pst.setString(4, cleaningWoman.getYearOfBirthday());
+            pst.setString(4, cleaningWoman.getPhoneNumber());
             pst.setString(5, cleaningWoman.getHiring());
             pst.setDouble(6, cleaningWoman.getExperience());
             pst.setInt(7, cleaningWoman.getId());
@@ -206,17 +194,5 @@ public class CleaningWomanDAOH2Impl implements CleaningWomanDAO {
         }
     }
 
-    private void createTableIfNotExists() {
-        try {
-            connection = getInstance().getConnection();
-            stmt = connection.createStatement();
-            stmt.executeUpdate(CREATE_CLEANING_WOMAN_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            getInstance().closeStatement(stmt);
-            getInstance().closeConnection(connection);
-        }
-    }
 
 }

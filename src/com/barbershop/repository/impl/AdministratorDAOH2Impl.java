@@ -25,18 +25,8 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
         return instance;
     }
 
-    private static final String CREATE_ADMINISTRATOR_TABLE = "CREATE TABLE IF NOT EXISTS administrators (" +
-            Administrator.ID + " INT(11) PRIMARY KEY AUTO_INCREMENT," +
-            Administrator.FIRST_NAME + " VARCHAR(255)," +
-            Administrator.LAST_NAME + " VARCHAR(255)," +
-            Administrator.MIDDLE_NAME + " VARCHAR(255)," +
-            Administrator.YEAR_OF_BIRTHDAY + " VARCHAR(255)," +
-            Administrator.HIRING + " VARCHAR(255)," +
-            Administrator.EXPERIENCE + " DOUBLE(4)," +
-            ");";
-
     private static final String INSERT_ADMINISTRATOR = String.format("INSERT INTO administrators(%s, %s, %s, %s, %s, %s)" +
-            " VALUES (?, ?, ?, ?, ?, ?);", Administrator.FIRST_NAME, Administrator.LAST_NAME, Administrator.MIDDLE_NAME, Administrator.YEAR_OF_BIRTHDAY, Administrator.HIRING, Administrator.EXPERIENCE);
+            " VALUES (?, ?, ?, ?, ?, ?);", Administrator.FIRST_NAME, Administrator.LAST_NAME, Administrator.MIDDLE_NAME, Administrator.PHONE_NUMBER, Administrator.HIRING, Administrator.EXPERIENCE);
 
     private static final String GET_ALL_ADMINISTRATORS = "SELECT * FROM administrators";
 
@@ -47,11 +37,7 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
     private static final String GET_ADMINISTRATOR_BY_NAME = "SELECT * FROM administrators WHERE first_name = ? and last_name = ? and middle_name = ?";
 
     private static final String UPDATE_ADMINISTRATOR = String.format("UPDATE administrators SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? " +
-            "WHERE id = ?", Administrator.FIRST_NAME, Administrator.LAST_NAME, Administrator.MIDDLE_NAME, Administrator.YEAR_OF_BIRTHDAY, Administrator.HIRING, Administrator.EXPERIENCE);
-
-    public AdministratorDAOH2Impl() {
-        createTableIfNotExists();
-    }
+            "WHERE id = ?", Administrator.FIRST_NAME, Administrator.LAST_NAME, Administrator.MIDDLE_NAME, Administrator.PHONE_NUMBER, Administrator.HIRING, Administrator.EXPERIENCE);
 
     @Override
     public void addAdministrator(Administrator administrator) {
@@ -62,7 +48,7 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
             pst.setString(1, administrator.getFirstName());
             pst.setString(2, administrator.getLastName());
             pst.setString(3, administrator.getMiddleName());
-            pst.setString(4, administrator.getYearOfBirthday());
+            pst.setString(4, administrator.getPhoneNumber());
             pst.setString(5, administrator.getHiring());
             pst.setDouble(6, administrator.getExperience());
 
@@ -92,7 +78,7 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
                 administrator.setFirstName(rs.getString(Administrator.FIRST_NAME));
                 administrator.setLastName(rs.getString(Administrator.LAST_NAME));
                 administrator.setMiddleName(rs.getString(Administrator.MIDDLE_NAME));
-                administrator.setYearOfBirthday(rs.getString(Administrator.YEAR_OF_BIRTHDAY));
+                administrator.setPhoneNumber(rs.getString(Administrator.PHONE_NUMBER));
                 administrator.setHiring(rs.getString(Administrator.HIRING));
                 administrator.setExperience(rs.getDouble(Administrator.EXPERIENCE));
                 administrators.add(administrator);
@@ -122,7 +108,7 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
                 administrator.setFirstName(rs.getString(Administrator.FIRST_NAME));
                 administrator.setLastName(rs.getString(Administrator.LAST_NAME));
                 administrator.setMiddleName(rs.getString(Administrator.MIDDLE_NAME));
-                administrator.setYearOfBirthday(rs.getString(Administrator.YEAR_OF_BIRTHDAY));
+                administrator.setPhoneNumber(rs.getString(Administrator.PHONE_NUMBER));
                 administrator.setHiring(rs.getString(Administrator.HIRING));
                 administrator.setExperience(rs.getDouble(Administrator.EXPERIENCE));
             }
@@ -151,7 +137,7 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
                 administrator.setFirstName(rs.getString(Administrator.FIRST_NAME));
                 administrator.setLastName(rs.getString(Administrator.LAST_NAME));
                 administrator.setMiddleName(rs.getString(Administrator.MIDDLE_NAME));
-                administrator.setYearOfBirthday(rs.getString(Administrator.YEAR_OF_BIRTHDAY));
+                administrator.setPhoneNumber(rs.getString(Administrator.PHONE_NUMBER));
                 administrator.setHiring(rs.getString(Administrator.HIRING));
                 administrator.setExperience(rs.getDouble(Administrator.EXPERIENCE));
             }
@@ -173,7 +159,7 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
             pst.setString(1, administrator.getFirstName());
             pst.setString(2, administrator.getLastName());
             pst.setString(3, administrator.getMiddleName());
-            pst.setString(4, administrator.getYearOfBirthday());
+            pst.setString(4, administrator.getPhoneNumber());
             pst.setString(5, administrator.getHiring());
             pst.setDouble(6, administrator.getExperience());
             pst.setInt(7, administrator.getId());
@@ -206,17 +192,6 @@ public class AdministratorDAOH2Impl implements AdministratorDAO {
         }
     }
 
-    private void createTableIfNotExists() {
-        try {
-            connection = getInstance().getConnection();
-            stmt = connection.createStatement();
-            stmt.executeUpdate(CREATE_ADMINISTRATOR_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            getInstance().closeStatement(stmt);
-            getInstance().closeConnection(connection);
-        }
-    }
+
 
 }

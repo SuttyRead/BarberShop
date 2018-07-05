@@ -6,13 +6,13 @@ public class Person {
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String MIDDLE_NAME = "middle_name";
-    public static final String YEAR_OF_BIRTHDAY = "year_of_birthday";
+    public static final String PHONE_NUMBER = "phone_number";
 
     private int id;
     private String firstName;
     private String lastName;
     private String middleName;
-    private String yearOfBirthday;
+    private String phoneNumber;
 
     public Person() {
     }
@@ -23,11 +23,11 @@ public class Person {
         this.middleName = middleName;
     }
 
-    public Person(String firstName, String lastName, String middleName, String yearOfBirthday) {
+    public Person(String firstName, String lastName, String middleName, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
-        this.yearOfBirthday = yearOfBirthday;
+        this.phoneNumber = phoneNumber;
     }
 
     public int getId() {
@@ -62,12 +62,12 @@ public class Person {
         this.middleName = middleName;
     }
 
-    public String getYearOfBirthday() {
-        return yearOfBirthday;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setYearOfBirthday(String yearOfBirthday) {
-        this.yearOfBirthday = yearOfBirthday;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Person {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", middleName='" + middleName + '\'' +
-                ", yearOfBirthday='" + yearOfBirthday + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 

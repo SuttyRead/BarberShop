@@ -26,18 +26,8 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
         return instance;
     }
 
-    private static final String CREATE_HAIRDRESSER_TABLE = "CREATE TABLE IF NOT EXISTS hairdressers (" +
-            Hairdresser.ID + " INT(11) PRIMARY KEY AUTO_INCREMENT," +
-            Hairdresser.FIRST_NAME + " VARCHAR(255)," +
-            Hairdresser.LAST_NAME + " VARCHAR(255)," +
-            Hairdresser.MIDDLE_NAME + " VARCHAR(255)," +
-            Hairdresser.YEAR_OF_BIRTHDAY + " VARCHAR(255)," +
-            Hairdresser.HIRING + " VARCHAR(255)," +
-            Hairdresser.EXPERIENCE + " DOUBLE(4)," +
-            ");";
-
     private static final String INSERT_HAIRDRESSER = String.format("INSERT INTO hairdressers(%s, %s, %s, %s, %s, %s)" +
-            " VALUES (?, ?, ?, ?, ?, ?);", Hairdresser.FIRST_NAME, Hairdresser.LAST_NAME, Hairdresser.MIDDLE_NAME, Hairdresser.YEAR_OF_BIRTHDAY, Hairdresser.HIRING, Hairdresser.EXPERIENCE);
+            " VALUES (?, ?, ?, ?, ?, ?);", Hairdresser.FIRST_NAME, Hairdresser.LAST_NAME, Hairdresser.MIDDLE_NAME, Hairdresser.PHONE_NUMBER, Hairdresser.HIRING, Hairdresser.EXPERIENCE);
 
     private static final String GET_ALL_HAIRDRESSERS = "SELECT * FROM hairdressers";
 
@@ -48,14 +38,13 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
     private static final String GET_HAIRDRESSER_BY_NAME = "SELECT * FROM hairdressers WHERE first_name = ? and last_name = ? and middle_name = ?";
 
     private static final String UPDATE_HAIRDRESSER = String.format("UPDATE hairdressers SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? " +
-            "WHERE id = ?", Hairdresser.FIRST_NAME, Hairdresser.LAST_NAME, Hairdresser.MIDDLE_NAME, Hairdresser.YEAR_OF_BIRTHDAY, Hairdresser.HIRING, Hairdresser.EXPERIENCE);
+            "WHERE id = ?", Hairdresser.FIRST_NAME, Hairdresser.LAST_NAME, Hairdresser.MIDDLE_NAME, Hairdresser.PHONE_NUMBER, Hairdresser.HIRING, Hairdresser.EXPERIENCE);
 
-    public HairdresserDAOH2Impl() {
-        createTableIfNotExists();
-    }
+
 
     @Override
     public void addHairdresser(Hairdresser hairdresser) {
+        MasterHandDAOH2Impl masterHandDAOH2 = new MasterHandDAOH2Impl();
         try {
             connection = getInstance().getConnection();
             pst = connection.prepareStatement(INSERT_HAIRDRESSER);
@@ -63,11 +52,13 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
             pst.setString(1, hairdresser.getFirstName());
             pst.setString(2, hairdresser.getLastName());
             pst.setString(3, hairdresser.getMiddleName());
-            pst.setString(4, hairdresser.getYearOfBirthday().toString());
+            pst.setString(4, hairdresser.getPhoneNumber().toString());
             pst.setString(5, hairdresser.getHiring().toString());
             pst.setDouble(6, hairdresser.getExperience());
 
             pst.execute();
+
+            masterHandDAOH2.addMasterHand(hairdresser);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,7 +83,7 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
                 hairdresser.setFirstName(rs.getString(Hairdresser.FIRST_NAME));
                 hairdresser.setLastName(rs.getString(Hairdresser.LAST_NAME));
                 hairdresser.setMiddleName(rs.getString(Hairdresser.MIDDLE_NAME));
-                hairdresser.setYearOfBirthday(rs.getString(Hairdresser.YEAR_OF_BIRTHDAY));
+                hairdresser.setPhoneNumber(rs.getString(Hairdresser.PHONE_NUMBER));
                 hairdresser.setHiring(rs.getString(Hairdresser.HIRING));
                 hairdresser.setExperience(rs.getDouble(Hairdresser.EXPERIENCE));
                 hairdressers.add(hairdresser);
@@ -122,7 +113,7 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
                 hairdresser.setFirstName(rs.getString(Hairdresser.FIRST_NAME));
                 hairdresser.setLastName(rs.getString(Hairdresser.LAST_NAME));
                 hairdresser.setMiddleName(rs.getString(Hairdresser.MIDDLE_NAME));
-                hairdresser.setYearOfBirthday(rs.getString(Hairdresser.YEAR_OF_BIRTHDAY));
+                hairdresser.setPhoneNumber(rs.getString(Hairdresser.PHONE_NUMBER));
                 hairdresser.setHiring(rs.getString(Hairdresser.HIRING));
                 hairdresser.setExperience(rs.getDouble(Hairdresser.EXPERIENCE));
             }
@@ -151,7 +142,7 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
                 hairdresser.setFirstName(rs.getString(Hairdresser.FIRST_NAME));
                 hairdresser.setLastName(rs.getString(Hairdresser.LAST_NAME));
                 hairdresser.setMiddleName(rs.getString(Hairdresser.MIDDLE_NAME));
-                hairdresser.setYearOfBirthday(rs.getString(Hairdresser.YEAR_OF_BIRTHDAY));
+                hairdresser.setPhoneNumber(rs.getString(Hairdresser.PHONE_NUMBER));
                 hairdresser.setHiring(rs.getString(Hairdresser.HIRING));
                 hairdresser.setExperience(rs.getDouble(Hairdresser.EXPERIENCE));
             }
@@ -173,7 +164,7 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
             pst.setString(1, hairdresser.getFirstName());
             pst.setString(2, hairdresser.getLastName());
             pst.setString(3, hairdresser.getMiddleName());
-            pst.setString(4, hairdresser.getYearOfBirthday());
+            pst.setString(4, hairdresser.getPhoneNumber());
             pst.setString(5, hairdresser.getHiring());
             pst.setDouble(6, hairdresser.getExperience());
             pst.setInt(7, hairdresser.getId());
@@ -206,17 +197,6 @@ public class HairdresserDAOH2Impl implements HairdresserDAO {
         }
     }
 
-    private void createTableIfNotExists() {
-        try {
-            connection = getInstance().getConnection();
-            stmt = connection.createStatement();
-            stmt.executeUpdate(CREATE_HAIRDRESSER_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            getInstance().closeStatement(stmt);
-            getInstance().closeConnection(connection);
-        }
-    }
+
 
 }

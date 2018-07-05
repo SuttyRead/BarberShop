@@ -13,8 +13,18 @@ public class CustomerService {
         customerDAOH2 = CustomerDAOH2Impl.instance();
     }
 
-    List<Customer> getAllCustomers() {
+
+
+    public List<Customer> getAllCustomers() {
         return customerDAOH2.getAllCustomers();
+    }
+
+    public Customer findCustomerById(int id){
+        return customerDAOH2.findCustomerById(id);
+    }
+
+    public void addCustomer(Customer customer){
+        customerDAOH2.addCustomer(customer);
     }
 
 }

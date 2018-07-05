@@ -39,10 +39,9 @@ public class CleaningWoman extends Person {
 
     @Override
     public String toString() {
-        return "CleaningWoman{" + super.toString() +
-                "experience=" + experience +
-                ", hiring=" + hiring +
-                '}';
+        return "CleaningWoman(First name = " + getFirstName() + ", last name = " + getLastName() + "," +
+                " middle name = " + getMiddleName() + ", phone number = " + getPhoneNumber() +
+                ", hiring = " + getHiring() + ", experience = " + getExperience() + ")";
     }
 
 }
